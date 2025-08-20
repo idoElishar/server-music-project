@@ -1,7 +1,7 @@
 import usersDAL from './Dal.users';
+import { sendVerificationEmail } from './mailer.users';
 import { comparePassword } from './secret';
 import { UserInterface } from './users.model';
-
 
 const usersService = {
   registerUser: async (user: UserInterface) => {
@@ -12,7 +12,7 @@ const usersService = {
 
     const newUser = await usersDAL.createUser(user);
     if (!newUser) throw new Error("faild to create user");
-
+    await sendVerificationEmail(user.email)
     return { success: true, message: 'Registration successful', user: newUser };
   },
 

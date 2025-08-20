@@ -17,7 +17,7 @@ const usersDAL = {
     try {
       let { password, ...rest } = user;
       if (password) {
-         password = generateUserPassword(password);
+        password = generateUserPassword(password);
         return await UserModel.create({ ...rest, password });
       }
     } catch (error: any) {
