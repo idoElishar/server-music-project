@@ -17,9 +17,10 @@ const SequencerStateSchema = new Schema(
     loopEnabled: { type: Boolean, required: true },
     volumeDb: { type: Number, required: true },
     instrumentsSelected: { type: InstrumentsSelectedSchema, required: true },
-    rows: { type: [String], default: [] },      // כותרות השורות כפי שהלקוח שלח
-    grid: { type: [[Boolean]], required: true }, // מטריצה rows x cols
+    rows: { type: [String], default: [] },
+    grid: { type: [[Boolean]], required: true },
     savedAt: { type: Date, default: Date.now },
+    userName: { type: String, required: false },
   },
   { timestamps: true }
 );

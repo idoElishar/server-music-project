@@ -21,12 +21,13 @@ async function saveState(payload: SavePayload) {
   return doc;
 }
 
-async function getStateById(id: string) {
-  return sequencerDAL.findById(id);
+async function getStateById(id: string,userQuery:string) {
+  return sequencerDAL.findById(id,userQuery);
 }
 
-async function listStates(limit = 10) {
-  return sequencerDAL.list(limit);
+
+export function getLatestStateByUser(userName: string) {
+  return sequencerDAL.latestByUser(userName);
 }
 
 async function deleteState(id: string) {
@@ -36,6 +37,6 @@ async function deleteState(id: string) {
 export default {
   saveState,
   getStateById,
-  listStates,
+  getLatestStateByUser,
   deleteState,
 };

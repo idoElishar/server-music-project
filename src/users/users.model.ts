@@ -1,0 +1,47 @@
+import mongoose, { Schema } from 'mongoose';
+import Joi from 'joi';
+
+export interface UserInterface {
+    username: string;
+    email: string;
+    password: string | null;
+    isAdmin: boolean;
+    passwordResetToken?: string | null;
+    passwordResetExpires?: Date | null;
+    tempPassword?: string | null;
+}
+
+const userSchema = new Schema<UserInterface>({
+    username: { type: String, required: true },
+    email: { type: String, required: true },
+    password: { type: String, required: true },
+    isAdmin: { type: Boolean, required: true },
+    tempPassword: { type: String, default: null },
+    passwordResetToken: { type: String, default: null },
+    passwordResetExpires: { type: Date, default: null },
+}, { versionKey: false });
+
+
+const UserModel = mongoose.model<UserInterface>('User', userSchema, 'users');
+
+
+const userJoiSchema = Joi.object({
+    username: Joi.string().min(5).max(30).required(),
+    password: Joi.string().min(5).max(30).required(),
+    email: Joi.string().email().required(),
+    isAdmin: Joi.boolean().required(),
+});
+
+const loginUserSchema = Joi.object({
+    email: Joi.string().email().required(),
+    password: Joi.string().required(),
+});
+
+const registerUserSchema = Joi.object({
+    username: Joi.string().min(3).max(30).required(),
+    password: Joi.string().min(5).required(),
+    email: Joi.string().email().required(),
+    isAdmin: Joi.boolean().required(),
+});
+
+export { UserModel, userJoiSchema, registerUserSchema, loginUserSchema };

@@ -3,7 +3,7 @@ import sequencerService from "./Sequencer.service";
 
 export const saveSequencerState = async (req: Request, res: Response): Promise<void> => {
   try {
-    const p = req.body;
+    const p = req.body; 
     const valid =
       p &&
       typeof p.bpm === "number" &&
@@ -28,8 +28,9 @@ export const saveSequencerState = async (req: Request, res: Response): Promise<v
 };
 
 export const getSequencerStateById = async (req: Request, res: Response): Promise<void> => {
-  try {
-    const state = await sequencerService.getStateById(req.params.id);
+  try {    
+    const userQuery = req.body.user as string ;
+    const state = await sequencerService.getStateById(req.params.id,userQuery);
     if (!state) {
       res.status(404).json({ message: "State not found" });
       return;
@@ -41,13 +42,15 @@ export const getSequencerStateById = async (req: Request, res: Response): Promis
   }
 };
 
-export const listSequencerStates = async (req: Request, res: Response): Promise<void> => {
+export const getLatestSequencerStateByUser = async (req: Request, res: Response) => {
   try {
-    const limit = Math.max(1, Math.min(100, Number(req.query.limit) || 10));
-    const items = await sequencerService.listStates(limit);
-    res.status(200).json({ ok: true, items });
-  } catch (error) {
-    console.error("Error listing states:", error);
+    const userName = (req.params.user ) as string;        
+    if (!userName) return res.status(400).json({ message: "Missing user" });
+    const state = await sequencerService.getLatestStateByUser(userName);
+    if (!state) return res.status(404).json({ message: "State not found" });
+    res.json({ ok: true, state });
+  } catch (e) {
+    console.error("Error fetching latest state by user:", e);
     res.status(500).json({ message: "Internal server error" });
   }
 };
@@ -69,6 +72,6 @@ export const deleteSequencerState = async (req: Request, res: Response): Promise
 export default {
   saveSequencerState,
   getSequencerStateById,
-  listSequencerStates,
+  getLatestSequencerStateByUser,
   deleteSequencerState,
 };
