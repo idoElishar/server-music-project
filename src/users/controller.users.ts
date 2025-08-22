@@ -2,7 +2,7 @@ import usersService from './service.users';
 import { loginUserSchema, registerUserSchema } from './users.model';
 import jwt from 'jsonwebtoken';
 import { Request, Response } from 'express';
-const secret_key = process.env.SECRET || ""
+const secret_key = process.env.SECRET || "erp"
 
 const generateToken = (userId: string) => {
     return jwt.sign({ userId }, secret_key, { expiresIn: '3h' });
